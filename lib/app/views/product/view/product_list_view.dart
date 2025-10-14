@@ -1,0 +1,182 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:sephora/app/controllers/product_list_view_controller.dart';
+import 'package:sephora/app/core/utils/constants/image_assets.dart';
+import 'package:sephora/app/views/product/widgets/custom_search_app_bar_widget.dart';
+import 'package:sephora/app/views/product/widgets/product_card_widget.dart';
+import 'package:sephora/app/widgets/list_view/paginated_grid.dart';
+import 'package:sephora/app/widgets/responsive_body/body_widget.dart';
+import 'package:sephora/app/widgets/responsive_body/message_body_widgets/show_message_svg_widget.dart';
+import '../../../../shared/app_style.dart';
+import '../../../routes/app_routes.dart';
+import 'product_search_view.dart';
+
+class ProductListView extends StatelessWidget {
+  ProductListView({super.key});
+  final controller = Get.put(ProductListViewController());
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.kPrimaryBackgroundColor,
+      appBar: CustomSearchAppBar(
+        controller: controller.searchController.value,
+        onSearchTap: () async {
+          final result = await Get.to(
+            () => ProductSearchView(),
+            transition: Transition.fadeIn,
+          );
+          if (result != true) {
+            controller.searchController.value.clear();
+            controller.productSearchResponse.value.responseData?.products
+                ?.clear();
+            controller.productSearchResponse.refresh();
+          }
+        },
+      ),
+      body: Obx(
+        () => controller.isSearchQueryEmpty.value
+            ? _productListWidget()
+            : _searchpProductListWidget(),
+      ),
+    );
+  }
+
+  BodyWidget _productListWidget() {
+    return BodyWidget(
+      isLoading: controller.productResponse.value.isLoading,
+      noBodyData: controller.productResponse.value.status != 1,
+      noBodyWidget: ShowMessageSvgWidget(
+        size: 120.h,
+        svgPath: Assets.noData,
+        message:
+            controller.productResponse.value.message ?? "Something went wrong",
+        onRefresh: () {
+          controller.fetchProductList();
+        },
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      body: PaginatedGridView(
+        onRefresh: () async {
+          controller.fetchProductList();
+        },
+        isLoading: controller.productResponse.value.isLoading,
+        itemCount:
+            controller.productResponse.value.responseData?.products?.length ??
+            0,
+        backgroundColor: AppColors.kPrimaryBackgroundColor,
+        emptyMessage: "No Products Found",
+        gridEmptyWidget: ShowMessageSvgWidget(
+          size: 120.h,
+          svgPath: Assets.noData,
+          message: "No Products Found",
+        ),
+        isPaginationLoading:
+            controller.productResponse.value.isPaginationLoading,
+        paginationOver:
+            controller.productResponse.value.responseData?.currentPage ==
+            controller.productResponse.value.responseData?.totalPages,
+        onPagination: () {
+          controller.fetchNextProductList();
+        },
+        paginationErrorMessage: null,
+        onPaginationRetry: null,
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        aspectRatio: 0.5,
+        crossAxisSpacing: 4.w,
+        mainAxisSpacing: 4.h,
+
+        itemBuilder: (context, index) {
+          final product =
+              controller.productResponse.value.responseData?.products?[index];
+          return ProductCard(
+            productUrl: product?.imageUrl ?? '',
+            name: product?.productName ?? '',
+            description: product?.description ?? '',
+            rating: product?.rating?.toDouble() ?? 0.0,
+            review: (product?.rating ?? 0).toInt(),
+            price: product?.finalPrice ?? 0,
+            currency: '\$',
+            onFavTap: () {},
+            onProductTap: () {
+              Get.toNamed(Routes.productInfoView, arguments: product?.id);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  BodyWidget _searchpProductListWidget() {
+    return BodyWidget(
+      isLoading: controller.productSearchResponse.value.isLoading,
+      noBodyData: controller.productSearchResponse.value.status != 1,
+      noBodyWidget: ShowMessageSvgWidget(
+        svgPath: Assets.noData,
+        size: 120.h,
+        message:
+            controller.productSearchResponse.value.message ??
+            "Something went wrong",
+        onRefresh: () {
+          controller.fetchNextProductList();
+        },
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      body: PaginatedGridView(
+        onRefresh: () async {
+          controller.fetchNextProductList();
+        },
+        isLoading: controller.productSearchResponse.value.isLoading,
+        itemCount:
+            controller
+                .productSearchResponse
+                .value
+                .responseData
+                ?.products
+                ?.length ??
+            0,
+        backgroundColor: AppColors.kPrimaryBackgroundColor,
+        emptyMessage: "No Products Found",
+        gridEmptyWidget: ShowMessageSvgWidget(
+          size: 120.h,
+          svgPath: Assets.noData,
+          message: "No Products Found",
+        ),
+        isPaginationLoading:
+            controller.productSearchResponse.value.isPaginationLoading,
+        paginationOver:
+            controller.productSearchResponse.value.responseData?.currentPage ==
+            controller.productSearchResponse.value.responseData?.totalPages,
+        onPagination: () {
+          controller.fetchSearchNextProductList();
+        },
+        paginationErrorMessage: null,
+        onPaginationRetry: null,
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        aspectRatio: 0.5,
+        crossAxisSpacing: 4.w,
+        mainAxisSpacing: 4.h,
+        itemBuilder: (context, index) {
+          final product = controller
+              .productSearchResponse
+              .value
+              .responseData
+              ?.products?[index];
+          return ProductCard(
+            productUrl: product?.imageUrl ?? '',
+            name: product?.productName ?? '',
+            description: product?.description ?? '',
+            rating: product?.rating?.toDouble() ?? 0.0,
+            review: (product?.rating ?? 0).toInt(),
+            price: product?.finalPrice ?? 0,
+            currency: '\$',
+            onFavTap: () {},
+            onProductTap: () {
+              Get.toNamed(Routes.productInfoView, arguments: product?.id);
+            },
+          );
+        },
+      ),
+    );
+  }
+}
