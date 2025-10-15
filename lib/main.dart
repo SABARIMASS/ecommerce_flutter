@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:sephora/app/bindings/app_binding.dart';
-import 'package:sephora/app/views/dashboard/view/dashboard_view.dart';
+import 'package:sephora/app/modules/dashboard/view/dashboard_view.dart';
 import 'app/routes/app_routes.dart';
 import 'app/core/utils/app_screen_size.dart';
+import 'shared/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -25,9 +25,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'SEPHORA',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-          ),
+          theme: themeData,
           home: child,
           initialBinding: AppBindings(),
           getPages: AppPages.routes,

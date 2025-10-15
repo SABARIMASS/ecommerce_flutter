@@ -109,34 +109,42 @@ class _PaginatedGridViewState extends State<PaginatedGridView> {
   }
 
   Widget gridViewBuilder() {
-    return GridView.builder(
-      shrinkWrap: true,
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.builder(
+            shrinkWrap: true,
 
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount,
-        crossAxisSpacing: widget.crossAxisSpacing,
-        mainAxisSpacing: widget.mainAxisSpacing,
-        childAspectRatio: widget.aspectRatio,
-      ),
-      itemCount: widget.itemCount + (widget.isPaginationLoading ? 1 : 0),
-      padding:
-          widget.padding ??
-          EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
-      itemBuilder: (BuildContext context, int index) {
-        if (index == widget.itemCount) {
-          return PaginationLoader(
-            isLoading: widget.isPaginationLoading,
-            showMessage: true,
-            errorMessage: widget.paginationErrorMessage,
-            onRetry: widget.onPaginationRetry != null
-                ? () {
-                    widget.onPaginationRetry!();
-                  }
-                : null,
-          );
-        }
-        return widget.itemBuilder(context, index);
-      },
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: widget.crossAxisCount,
+              crossAxisSpacing: widget.crossAxisSpacing,
+              mainAxisSpacing: widget.mainAxisSpacing,
+              childAspectRatio: widget.aspectRatio,
+            ),
+            itemCount: widget.itemCount,
+            // + (widget.isPaginationLoading ? 1 : 0)
+            padding:
+                widget.padding ??
+                EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
+            itemBuilder: (BuildContext context, int index) {
+              // if (index == widget.itemCount) {
+              //   return SizedBox.fromSize();
+              // }
+              return widget.itemBuilder(context, index);
+            },
+          ),
+        ),
+        PaginationLoader(
+          isLoading: widget.isPaginationLoading,
+          showMessage: true,
+          errorMessage: widget.paginationErrorMessage,
+          onRetry: widget.onPaginationRetry != null
+              ? () {
+                  widget.onPaginationRetry!();
+                }
+              : null,
+        ),
+      ],
     );
   }
 }

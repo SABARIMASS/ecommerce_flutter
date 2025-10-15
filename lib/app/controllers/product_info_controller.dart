@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../services/product_api_service.dart';
-import '../views/product/data/product_info_api_data.dart';
+import '../modules/product/data/product_info_api_data.dart';
 
 class ProductInfoController extends GetxController {
   Rx<ProductInfoResponse> productInfoResponse = ProductInfoResponse().obs;

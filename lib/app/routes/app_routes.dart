@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import '../bindings/app_binding.dart';
-import '../views/dashboard/view/dashboard_view.dart';
-import '../views/product/view/product_info_view.dart';
-import '../views/product/view/product_list_view.dart';
-import '../views/product/view/product_search_view.dart';
+import '../modules/dashboard/view/dashboard_view.dart';
+import '../modules/product/view/product_info_view.dart';
+import '../modules/product/view/product_list_view.dart';
+import '../modules/product/view/product_search_view.dart';
 
 abstract class Routes {
   static const splashView = '/splashView';

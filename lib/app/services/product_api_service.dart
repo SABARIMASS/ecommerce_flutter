@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-
 import '../../network/api_provider.dart';
 import '../core/utils/constants/api_service_url.dart';
-import '../views/product/data/product_info_api_data.dart';
-import '../views/product/data/product_list_api_data.dart';
+import '../modules/product/data/product_info_api_data.dart';
+import '../modules/product/data/product_list_api_data.dart';
 
 class ProductApiService {
   static final ApiProvider apiProvider = GetInstance().put(ApiProvider());

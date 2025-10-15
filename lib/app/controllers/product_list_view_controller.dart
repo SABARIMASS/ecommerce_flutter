@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../services/product_api_service.dart';
-import '../views/product/data/product_list_api_data.dart';
+import '../modules/product/data/product_list_api_data.dart';
 
 class ProductListViewController extends GetxController {
   Rx<ProductResponse> productResponse = ProductResponse().obs;
