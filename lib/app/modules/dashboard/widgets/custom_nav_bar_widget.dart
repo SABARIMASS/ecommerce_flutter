@@ -55,7 +55,7 @@ class CustomBottomNavigation extends StatelessWidget {
                         icon: item.icon,
                         color: isSelected
                             ? AppColors.kIconPrimaryColor
-                            : AppColors.kHintTextColor,
+                            : AppColors.kGreyColor,
                         size: 20.r,
                       ),
                       SizedBox(height: 4.h),
@@ -65,10 +65,10 @@ class CustomBottomNavigation extends StatelessWidget {
                           fontSize: AppFontSize.extraSmall.value,
                           color: isSelected
                               ? AppColors.kIconPrimaryColor
-                              : AppColors.kHintTextColor,
+                              : AppColors.kGreyColor,
                           fontWeight: isSelected
                               ? AppFontWeight.semiBold.value
-                              : AppFontWeight.normal.value,
+                              : AppFontWeight.semiBold.value,
                         ),
                       ),
                     ],

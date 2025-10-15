@@ -109,5 +109,7 @@ class AppColors {
   static const Color kHintTextColor = Color(0xFF9E9E9E);
   static const Color kErrorColor = Color(0xFFD32F2F);
 
+  static const Color kGreyColor = Color.fromARGB(255, 112, 112, 112);
+
   // Add more colors as needed
 }
