@@ -5,13 +5,17 @@ import 'package:sephora/app/core/utils/constants/image_assets.dart';
 import 'package:sephora/shared/app_style.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../core/helpers/app_info.dart';
+import '../../../core/utils/percentage.dart';
+
 class ProductCard extends StatelessWidget {
   final String productUrl;
   final String name;
   final String description;
   final double rating;
-  final String review;
+
   final num price;
+  final num total;
   final bool isFav;
   final String currency;
   final VoidCallback? onFavTap;
@@ -23,8 +27,9 @@ class ProductCard extends StatelessWidget {
     required this.name,
     required this.description,
     required this.rating,
-    required this.review,
+
     required this.price,
+    required this.total,
     required this.isFav,
     required this.currency,
     this.onFavTap,
@@ -51,6 +56,7 @@ class ProductCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(12.r),
+                      bottom: Radius.circular(12.r),
                     ),
                     child: CachedNetworkImage(
                       imageUrl: productUrl,
@@ -80,6 +86,29 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (price > 0 && price < total)
+                    Positioned(
+                      top: 10,
+                      left: 8,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(2.r),
+                        ),
+                        child: Text(
+                          'SAVE ${ProductHelpers.calculateOfferPercentage(total.toDouble(), price.toDouble()).toStringAsFixed(0)}% OFF',
+                          style: TextStyle(
+                            color: AppColors.kSecondaryColor,
+                            fontWeight: AppFontWeight.semiBold.value,
+                            fontSize: AppFontSize.extraSmall.value,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -102,18 +131,8 @@ class ProductCard extends StatelessWidget {
                         color: AppColors.kPrimaryTextColor,
                       ),
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: AppFontWeight.medium.value,
-                        fontSize: AppFontSize.extraSmall.value,
-                        color: AppColors.kHintTextColor,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
+
+                    SizedBox(height: 4.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -121,12 +140,15 @@ class ProductCard extends StatelessWidget {
                           children: [
                             starRating(rating),
                             SizedBox(width: 2.w),
-                            Text(
-                              review,
-                              style: TextStyle(
-                                fontWeight: AppFontWeight.medium.value,
-                                fontSize: AppFontSize.extraSmall.value,
-                                color: AppColors.kPrimaryTextColor,
+                            Visibility(
+                              visible: rating != 0,
+                              child: Text(
+                                rating.toStringAsFixed(1),
+                                style: TextStyle(
+                                  fontWeight: AppFontWeight.medium.value,
+                                  fontSize: AppFontSize.extraSmall.value,
+                                  color: AppColors.kPrimaryTextColor,
+                                ),
                               ),
                             ),
                           ],
@@ -134,14 +156,56 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 2.h),
-                    Text(
-                      '$currency $price',
-                      style: TextStyle(
-                        fontWeight: AppFontWeight.bold.value,
-                        fontSize: AppFontSize.medium.value,
-                        color: AppColors.kPrimaryTextColor,
+                    if (price > 0 && price < total)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          children: [
+                            // Original Price (Strikethrough)
+                            Text(
+                              '${AppInfo.kCurrency}${total.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                fontWeight: AppFontWeight.medium.value,
+                                fontSize: AppFontSize.small.value,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+
+                            // Discounted Price (Bold)
+                            Text(
+                              '${AppInfo.kCurrency}${price.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontWeight: AppFontWeight.bold.value,
+                                fontSize: AppFontSize.small.value,
+                                color: AppColors.kPrimaryTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Text(
+                          '${AppInfo.kCurrency}${total.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontWeight: AppFontWeight.bold.value,
+                            fontSize: AppFontSize.small.value,
+                            color: AppColors.kPrimaryTextColor,
+                          ),
+                        ),
                       ),
-                    ),
+
+                    // Text(
+                    //   '$currency $price',
+                    //   style: TextStyle(
+                    //     fontWeight: AppFontWeight.bold.value,
+                    //     fontSize: AppFontSize.medium.value,
+                    //     color: AppColors.kPrimaryTextColor,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

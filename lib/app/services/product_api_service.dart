@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import '../../network/api_provider.dart';
 import '../core/utils/constants/api_service_url.dart';
-import '../modules/product/data/product_info_api_data.dart';
 import '../modules/product/data/product_list_api_data.dart';
 
 class ProductApiService {
@@ -15,6 +14,7 @@ class ProductApiService {
           request: '',
         ),
         queryParam: {
+          "q": "Beauty Barn",
           "limit": request.limit.toString(),
           "page": request.page.toString(),
         },
@@ -39,30 +39,12 @@ class ProductApiService {
         queryParam: {
           "limit": request.limit.toString(),
           "page": request.page.toString(),
-          'query': request.query ?? '',
+          'q': request.query ?? '',
         },
         requestType: RequestType.kGet,
       );
 
       return ProductResponse.fromJson(json.decode(response));
-    } catch (e) {
-      throw "Something went wrong";
-    }
-  }
-
-  static Future<ProductInfoResponse> productInfoApi(
-    ProductInfoRequest request,
-  ) async {
-    try {
-      final response = await apiProvider.httpRequest(
-        resource: Resource(
-          url: '${ApiServiceUrl.productsInfoEndPoint}/${request.id}',
-          request: jsonEncode(request.toJson()),
-        ),
-        requestType: RequestType.kGet,
-      );
-
-      return ProductInfoResponse.fromJson(json.decode(response));
     } catch (e) {
       throw "Something went wrong";
     }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sephora/app/widgets/list_view/paginated_list.dart';
 import '../../../../shared/app_style.dart';
 import '../../../controllers/product_list_view_controller.dart';
+import '../../../core/helpers/app_info.dart';
 import '../../../core/utils/constants/image_assets.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widgets/responsive_body/body_widget.dart';
@@ -32,7 +33,7 @@ class ProductSearchView extends StatelessWidget {
       body: Obx(
         () => BodyWidget(
           isLoading: controller.productSearchResponse.value.isLoading,
-          noBodyData: controller.productSearchResponse.value.status != 1,
+          noBodyData: controller.productSearchResponse.value.statusCode != 200,
           loaderWidget: ListShimmer(itemCount: 10),
           noBodyWidget: controller.isSearchQueryEmpty.value
               ? ShowMessageSvgWidget(
@@ -71,12 +72,8 @@ class ProductSearchView extends StatelessWidget {
             isPaginationLoading:
                 controller.productSearchResponse.value.isPaginationLoading,
             paginationOver:
-                controller
-                    .productSearchResponse
-                    .value
-                    .responseData
-                    ?.currentPage ==
-                controller.productSearchResponse.value.responseData?.totalPages,
+                controller.productSearchResponse.value.meta?.currentPage ==
+                controller.productSearchResponse.value.meta?.lastPage,
             onPagination: () {
               controller.fetchSearchNextProductList();
             },
@@ -92,11 +89,11 @@ class ProductSearchView extends StatelessWidget {
                   ?.products?[index];
               return ProductRowTile(
                 onTap: () {
-                  Get.toNamed(Routes.productInfoView, arguments: product?.id);
+                  Get.toNamed(Routes.productInfoView, arguments: product);
                 },
-                productUrl: product?.imageUrl ?? '',
-                name: product?.productName ?? '',
-                description: product?.productDescription ?? '',
+                productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
+                name: product?.title ?? '',
+                description: product?.handle ?? '',
               );
             },
             separator: SizedBox(height: 8.h),

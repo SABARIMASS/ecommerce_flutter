@@ -8,6 +8,7 @@ import '../../../controllers/product_info_controller.dart';
 import '../../../core/utils/constants/image_assets.dart';
 import '../../../widgets/responsive_body/body_widget.dart';
 import '../../../widgets/responsive_body/message_body_widgets/show_message_svg_widget.dart';
+import '../data/product_list_api_data.dart';
 import '../widgets/product_info_widget.dart';
 
 class ProductInFoView extends GetView<ProductInfoController> {
@@ -23,8 +24,7 @@ class ProductInFoView extends GetView<ProductInfoController> {
           surfaceTintColor: AppColors.kPrimaryBackgroundColor,
           elevation: 0,
           title: Text(
-            controller.productInfoResponse.value.responseData?.productName ??
-                'Product Info',
+            controller.productInfoResponse?.value.title ?? 'Product Info',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.kPrimaryTextColor,
@@ -34,20 +34,21 @@ class ProductInFoView extends GetView<ProductInfoController> {
           centerTitle: true,
         ),
         body: BodyWidget(
-          isLoading: controller.productInfoResponse.value.isLoading,
-          noBodyData: controller.productInfoResponse.value.status != 1,
+          isLoading: false,
+          noBodyData: controller.productInfoResponse?.value.id == null,
           loaderWidget: ProductDetailShimmer(),
           noBodyWidget: ShowMessageSvgWidget(
             size: 120.h,
             svgPath: Assets.noData,
-            message:
-                controller.productInfoResponse.value.message ??
-                "Something went wrong",
+            message: controller.productInfoResponse?.value.id == null
+                ? "No Product Data"
+                : "Something went wrong",
           ),
           padding: EdgeInsets.symmetric(horizontal: 0.w),
-          body: controller.productInfoResponse.value.responseData != null
+          body: controller.productInfoResponse?.value.id != null
               ? CustomProductDetailWidget(
-                  product: controller.productInfoResponse.value.responseData!,
+                  product:
+                      controller.productInfoResponse?.value ?? ProductItem(),
                 )
               : const SizedBox.shrink(),
         ),

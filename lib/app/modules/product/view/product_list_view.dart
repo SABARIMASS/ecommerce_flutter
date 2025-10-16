@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sephora/app/controllers/product_list_view_controller.dart';
+import 'package:sephora/app/core/helpers/app_info.dart';
 import 'package:sephora/app/core/utils/constants/image_assets.dart';
 import 'package:sephora/app/modules/product/widgets/custom_search_app_bar_widget.dart';
 import 'package:sephora/app/modules/product/widgets/product_card_widget.dart';
@@ -49,7 +50,7 @@ class ProductListView extends StatelessWidget {
   BodyWidget _productListWidget() {
     return BodyWidget(
       isLoading: controller.productResponse.value.isLoading,
-      noBodyData: controller.productResponse.value.status != 1,
+      noBodyData: controller.productResponse.value.statusCode != 200,
       loaderWidget: GridShimmer(itemCount: 10),
       noBodyWidget: ShowMessageSvgWidget(
         size: 120.h,
@@ -79,15 +80,15 @@ class ProductListView extends StatelessWidget {
         isPaginationLoading:
             controller.productResponse.value.isPaginationLoading,
         paginationOver:
-            controller.productResponse.value.responseData?.currentPage ==
-            controller.productResponse.value.responseData?.totalPages,
+            controller.productResponse.value.meta?.currentPage ==
+            controller.productResponse.value.meta?.lastPage,
         onPagination: () {
           controller.fetchNextProductList();
         },
         paginationErrorMessage: null,
         onPaginationRetry: null,
         padding: EdgeInsets.symmetric(horizontal: 0),
-        aspectRatio: 0.5,
+        aspectRatio: 0.64,
         crossAxisSpacing: 4.w,
         mainAxisSpacing: 4.h,
 
@@ -95,14 +96,15 @@ class ProductListView extends StatelessWidget {
           final product =
               controller.productResponse.value.responseData?.products?[index];
           return ProductCard(
-            productUrl: product?.imageUrl ?? '',
-            name: product?.productName ?? '',
+            productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
+            name: product?.title ?? '',
             description: product?.description ?? '',
-            rating: product?.rating?.toDouble() ?? 0.0,
-            review: product?.review ?? "",
-            price: product?.finalPrice ?? 0,
+            rating: product?.averageRating?.toDouble() ?? 0.0,
+
+            price: product?.variants?.firstOrNull?.specialPrice ?? 0,
+            total: product?.variants?.firstOrNull?.price ?? 0,
             isFav: product?.isFav ?? false,
-            currency: '\$',
+            currency: AppInfo.kCurrency,
             onFavTap: () {
               controller
                       .productResponse
@@ -121,7 +123,7 @@ class ProductListView extends StatelessWidget {
               controller.productResponse.refresh();
             },
             onProductTap: () {
-              Get.toNamed(Routes.productInfoView, arguments: product?.id);
+              Get.toNamed(Routes.productInfoView, arguments: product);
             },
           );
         },
@@ -132,7 +134,7 @@ class ProductListView extends StatelessWidget {
   BodyWidget _searchpProductListWidget() {
     return BodyWidget(
       isLoading: controller.productSearchResponse.value.isLoading,
-      noBodyData: controller.productSearchResponse.value.status != 1,
+      noBodyData: controller.productSearchResponse.value.statusCode != 200,
       noBodyWidget: ShowMessageSvgWidget(
         svgPath: Assets.noData,
         size: 120.h,
@@ -140,13 +142,13 @@ class ProductListView extends StatelessWidget {
             controller.productSearchResponse.value.message ??
             "Something went wrong",
         onRefresh: () {
-          controller.fetchNextProductList();
+          controller.fetchSearchNextProductList();
         },
       ),
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       body: PaginatedGridView(
         onRefresh: () async {
-          controller.fetchNextProductList();
+          controller.fetchSearchProductList();
         },
         isLoading: controller.productSearchResponse.value.isLoading,
         itemCount:
@@ -167,15 +169,15 @@ class ProductListView extends StatelessWidget {
         isPaginationLoading:
             controller.productSearchResponse.value.isPaginationLoading,
         paginationOver:
-            controller.productSearchResponse.value.responseData?.currentPage ==
-            controller.productSearchResponse.value.responseData?.totalPages,
+            controller.productSearchResponse.value.meta?.currentPage ==
+            controller.productSearchResponse.value.meta?.lastPage,
         onPagination: () {
           controller.fetchSearchNextProductList();
         },
         paginationErrorMessage: null,
         onPaginationRetry: null,
         padding: EdgeInsets.symmetric(horizontal: 0),
-        aspectRatio: 0.5,
+        aspectRatio: 0.64,
         crossAxisSpacing: 4.w,
         mainAxisSpacing: 4.h,
         itemBuilder: (context, index) {
@@ -185,14 +187,15 @@ class ProductListView extends StatelessWidget {
               .responseData
               ?.products?[index];
           return ProductCard(
-            productUrl: product?.imageUrl ?? '',
-            name: product?.productName ?? '',
+            productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
+            name: product?.title ?? '',
             description: product?.description ?? '',
-            rating: product?.rating?.toDouble() ?? 0.0,
-            review: product?.review ?? "",
-            price: product?.finalPrice ?? 0,
+            rating: product?.averageRating?.toDouble() ?? 0.0,
+
+            price: product?.variants?.firstOrNull?.specialPrice ?? 0,
+            total: product?.variants?.firstOrNull?.price ?? 0,
             isFav: product?.isFav ?? false,
-            currency: '\$',
+            currency: AppInfo.kCurrency,
             onFavTap: () {
               controller
                       .productSearchResponse
@@ -211,7 +214,7 @@ class ProductListView extends StatelessWidget {
               controller.productSearchResponse.refresh();
             },
             onProductTap: () {
-              Get.toNamed(Routes.productInfoView, arguments: product?.id);
+              Get.toNamed(Routes.productInfoView, arguments: product);
             },
           );
         },

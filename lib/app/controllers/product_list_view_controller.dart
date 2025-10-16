@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../services/product_api_service.dart';
 import '../modules/product/data/product_list_api_data.dart';
 
@@ -44,15 +45,15 @@ extension ProductListViewControllerExtension on ProductListViewController {
           productResponse.value = ProductResponse(
             isLoading: false,
             message: error.toString(),
-            status: 500,
+            statusCode: 500,
           );
           productResponse.refresh();
         });
   }
 
   void fetchNextProductList() async {
-    if (productResponse.value.responseData?.currentPage ==
-        productResponse.value.responseData?.totalPages) {
+    if (productResponse.value.meta?.currentPage ==
+        productResponse.value.meta?.lastPage) {
       // No more pages to load
       return;
     }
@@ -61,18 +62,16 @@ extension ProductListViewControllerExtension on ProductListViewController {
     ProductApiService.productListApi(
           ProductRequest(
             limit: 10,
-            page: productResponse.value.responseData?.currentPage != null
-                ? (productResponse.value.responseData!.currentPage! + 1)
+            page: productResponse.value.meta?.currentPage != null
+                ? ((productResponse.value.meta?.currentPage ?? 0) + 1)
                 : 1,
           ),
         )
         .then((response) {
-          productResponse.value.status = response.status;
+          productResponse.value.statusCode = response.statusCode;
           productResponse.value.message = response.message;
-          productResponse.value.responseData?.currentPage =
-              response.responseData?.currentPage;
-          productResponse.value.responseData?.totalPages =
-              response.responseData?.totalPages;
+          productResponse.value.meta?.currentPage = response.meta?.currentPage;
+          productResponse.value.meta?.lastPage = response.meta?.lastPage;
           // Append new products to existing list
           productResponse.value.isPaginationLoading = false;
           productResponse.value.responseData?.products?.addAll(
@@ -110,15 +109,15 @@ extension ProductListViewControllerExtension on ProductListViewController {
           productSearchResponse.value = ProductResponse(
             isLoading: false,
             message: error.toString(),
-            status: 500,
+            statusCode: 500,
           );
           productSearchResponse.refresh();
         });
   }
 
   void fetchSearchNextProductList() async {
-    if (productSearchResponse.value.responseData?.currentPage ==
-        productSearchResponse.value.responseData?.totalPages) {
+    if (productSearchResponse.value.meta?.currentPage ==
+        productSearchResponse.value.meta?.lastPage) {
       // No more pages to load
       return;
     }
@@ -127,18 +126,17 @@ extension ProductListViewControllerExtension on ProductListViewController {
     ProductApiService.productSearchListApi(
           ProductRequest(
             limit: 10,
-            page: productSearchResponse.value.responseData?.currentPage != null
-                ? (productSearchResponse.value.responseData!.currentPage! + 1)
+            page: productSearchResponse.value.meta?.currentPage != null
+                ? ((productSearchResponse.value.meta!.currentPage ?? 0) + 1)
                 : 1,
           ),
         )
         .then((response) {
-          productSearchResponse.value.status = response.status;
+          productSearchResponse.value.statusCode = response.statusCode;
           productSearchResponse.value.message = response.message;
-          productSearchResponse.value.responseData?.currentPage =
-              response.responseData?.currentPage;
-          productSearchResponse.value.responseData?.totalPages =
-              response.responseData?.totalPages;
+          productSearchResponse.value.meta?.currentPage =
+              response.meta?.currentPage;
+          productSearchResponse.value.meta?.lastPage = response.meta?.lastPage;
           // Append new products to existing list
           productSearchResponse.value.isPaginationLoading = false;
           productSearchResponse.value.responseData?.products?.addAll(
