@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../core/utils/search_history.dart';
 import '../services/product_api_service.dart';
 import '../modules/product/data/product_list_api_data.dart';
 
 class ProductListViewController extends GetxController {
+  final SearchHistoryManager historyManager = SearchHistoryManager();
   Rx<ProductResponse> productResponse = ProductResponse().obs;
   Rx<ProductResponse> productSearchResponse = ProductResponse(
     isLoading: false,
   ).obs;
   final Rx<TextEditingController> searchController =
       TextEditingController().obs;
+
+  RxList<String> previousSearches = <String>[].obs;
   var isSearchQueryEmpty = true.obs;
   @override
   void onClose() {
@@ -28,7 +32,13 @@ class ProductListViewController extends GetxController {
         isSearchQueryEmpty.value = false;
       }
     });
+    loadSearchHistory();
     super.onInit();
+  }
+
+  void loadSearchHistory() {
+    previousSearches.value = historyManager.getSearchHistory();
+    previousSearches.refresh();
   }
 }
 
@@ -92,6 +102,8 @@ extension ProductListViewControllerExtension on ProductListViewController {
       productSearchResponse.refresh();
       return;
     }
+
+    loadSearchHistory();
     productSearchResponse.value.isLoading = true;
     productSearchResponse.refresh();
     ProductApiService.productSearchListApi(

@@ -52,7 +52,7 @@ extension FontWeightHelper on AppFontWeight {
       case AppFontWeight.semiBold:
         return FontWeight.w600;
       case AppFontWeight.bold:
-        return FontWeight.w700;
+        return FontWeight.w800;
       case AppFontWeight.extraBold:
         return FontWeight.w800;
     }

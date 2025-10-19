@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import '../../network/api_provider.dart';
 import '../core/utils/constants/api_service_url.dart';
+import '../modules/product/data/product_detail_api_data.dart';
 import '../modules/product/data/product_list_api_data.dart';
 
 class ProductApiService {
@@ -41,6 +42,40 @@ class ProductApiService {
           "page": request.page.toString(),
           'q': request.query ?? '',
         },
+        requestType: RequestType.kGet,
+      );
+
+      return ProductResponse.fromJson(json.decode(response));
+    } catch (e) {
+      throw "Something went wrong";
+    }
+  }
+
+  static Future<ProductDetailResponse> productDetail({
+    required String handler,
+  }) async {
+    try {
+      final response = await apiProvider.httpRequest(
+        resource: Resource(
+          url: '${ApiServiceUrl.productDetailEndPoint}/$handler',
+          request: '',
+        ),
+        requestType: RequestType.kGet,
+      );
+
+      return ProductDetailResponse.fromJson(json.decode(response));
+    } catch (e) {
+      throw "Something went wrong";
+    }
+  }
+
+  static Future<ProductResponse> similarProductApi({required String id}) async {
+    try {
+      final response = await apiProvider.httpRequest(
+        resource: Resource(
+          url: '${ApiServiceUrl.similarProductEndPoint}/$id/similar?limit=10',
+          request: '',
+        ),
         requestType: RequestType.kGet,
       );
 

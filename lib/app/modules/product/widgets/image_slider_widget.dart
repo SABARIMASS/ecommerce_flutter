@@ -3,15 +3,15 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart' show CarouselSlider;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sephora/app/modules/product/data/product_detail_api_data.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../core/helpers/app_info.dart';
 import '../../../core/utils/constants/image_assets.dart';
-import '../data/product_list_api_data.dart';
 
 class ProductImageCarousel extends StatefulWidget {
-  final ProductItem product;
+  final List<ProductImage>? productImages;
 
-  const ProductImageCarousel({super.key, required this.product});
+  const ProductImageCarousel({super.key, required this.productImages});
 
   @override
   State<ProductImageCarousel> createState() => _ProductImageCarouselState();
@@ -24,12 +24,8 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
   Widget build(BuildContext context) {
     // Create the list of image URLs
     final List<String> imageUrls = [
-      if (widget.product.thumbnail != null &&
-          widget.product.thumbnail!.isNotEmpty)
-        widget.product.thumbnail!,
-      if (widget.product.productImages != null &&
-          widget.product.productImages!.isNotEmpty)
-        ...widget.product.productImages!.map((img) => img.image ?? ""),
+      if (widget.productImages != null && widget.productImages!.isNotEmpty)
+        ...widget.productImages!.map((img) => img.image ?? ""),
     ].where((url) => url.isNotEmpty).toList();
 
     return Stack(

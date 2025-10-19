@@ -6,12 +6,14 @@ import '../../../../shared/app_style.dart';
 import '../../../controllers/product_list_view_controller.dart';
 import '../../../core/helpers/app_info.dart';
 import '../../../core/utils/constants/image_assets.dart';
+import '../../../core/utils/percentage.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widgets/responsive_body/body_widget.dart';
 import '../../../widgets/responsive_body/message_body_widgets/show_message_svg_widget.dart';
 import '../../../widgets/shimmers/list_item_shimmer_widget.dart';
 import '../widgets/product_search_app_bar_widget.dart';
 import '../widgets/product_tile_widget.dart';
+import '../widgets/trending_category_items_widget.dart';
 
 class ProductSearchView extends StatelessWidget {
   ProductSearchView({super.key});
@@ -26,6 +28,7 @@ class ProductSearchView extends StatelessWidget {
           controller.fetchSearchProductList();
         },
         onSearch: (query) {
+          controller.historyManager.addQueryToHistory(query);
           controller.fetchSearchProductList();
           Get.back(result: true);
         },
@@ -36,10 +39,27 @@ class ProductSearchView extends StatelessWidget {
           noBodyData: controller.productSearchResponse.value.statusCode != 200,
           loaderWidget: ListShimmer(itemCount: 10),
           noBodyWidget: controller.isSearchQueryEmpty.value
-              ? ShowMessageSvgWidget(
-                  svgPath: Assets.noData,
-                  size: 120.h,
-                  message: 'Please enter a search term',
+              ? SearchSuggestionsWidget(
+                  trendingCategories: [
+                    TrendingCategory(name: 'Gifts', icon: Icons.trending_up),
+                    TrendingCategory(
+                      name: 'Value & Gift Sets',
+                      icon: Icons.trending_up,
+                    ),
+                    TrendingCategory(name: 'Eyebrow', icon: Icons.trending_up),
+                    TrendingCategory(name: 'Makeup', icon: Icons.trending_up),
+                    TrendingCategory(
+                      name: 'Mini Size',
+                      icon: Icons.trending_up,
+                    ),
+                  ],
+                  previousSearches: controller.previousSearches,
+                  onItemTap: (value) {
+                    controller.searchController.value.text = value;
+                    controller.historyManager.addQueryToHistory(value);
+                    controller.fetchSearchProductList();
+                    Get.back(result: true);
+                  }, // Pass the callback function
                 )
               : ShowMessageSvgWidget(
                   size: 120.h,
@@ -93,7 +113,9 @@ class ProductSearchView extends StatelessWidget {
                 },
                 productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
                 name: product?.title ?? '',
-                description: product?.handle ?? '',
+                description: ProductHelpers.extractTextWithEntities(
+                  product?.description ?? '',
+                ),
               );
             },
             separator: SizedBox(height: 8.h),

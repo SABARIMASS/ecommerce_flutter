@@ -115,7 +115,7 @@ class ProductCard extends StatelessWidget {
 
             // Second Expanded: Product Info
             Expanded(
-              flex: 1,
+              //flex: 1,
               child: Padding(
                 padding: EdgeInsets.all(8.r),
                 child: Column(
@@ -127,11 +127,27 @@ class ProductCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: AppFontWeight.bold.value,
-                        fontSize: AppFontSize.small.value,
+                        fontSize: AppFontSize.extraSmall.value,
                         color: AppColors.kPrimaryTextColor,
                       ),
                     ),
 
+                    Visibility(
+                      visible: description.isNotEmpty,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Text(
+                          description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: AppFontWeight.bold.value,
+                            fontSize: AppFontSize.extraSmall.value,
+                            color: AppColors.kPrimaryTextColor,
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 4.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

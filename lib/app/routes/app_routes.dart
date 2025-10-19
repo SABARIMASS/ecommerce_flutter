@@ -39,7 +39,7 @@ class AppPages {
     GetPage(
       name: Routes.productInfoView,
       page: () => ProductInFoView(),
-      binding: AppBindings(),
+      binding: ProductInfoBinding(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
     ),

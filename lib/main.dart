@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sephora/app/bindings/app_binding.dart';
 import 'package:sephora/app/modules/dashboard/view/dashboard_view.dart';
 import 'app/routes/app_routes.dart';
 import 'app/core/utils/app_screen_size.dart';
 import 'shared/theme.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 

@@ -83,6 +83,7 @@ class CustomSearchBarAppBar extends StatelessWidget
                     child: InkWell(
                       onTap: () {
                         controller.clear();
+                        onChanged?.call('');
                       },
                       child: HugeIcon(
                         icon: HugeIcons.strokeRoundedCancelCircle,

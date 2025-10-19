@@ -11,6 +11,7 @@ import 'package:sephora/app/widgets/responsive_body/body_widget.dart';
 import 'package:sephora/app/widgets/responsive_body/message_body_widgets/show_message_svg_widget.dart';
 import 'package:sephora/app/widgets/shimmers/product_shimmer.dart';
 import '../../../../shared/app_style.dart';
+import '../../../core/utils/percentage.dart';
 import '../../../routes/app_routes.dart';
 import '../../../widgets/safe_area_container.dart';
 import 'product_search_view.dart';
@@ -88,9 +89,9 @@ class ProductListView extends StatelessWidget {
         paginationErrorMessage: null,
         onPaginationRetry: null,
         padding: EdgeInsets.symmetric(horizontal: 0),
-        aspectRatio: 0.64,
-        crossAxisSpacing: 4.w,
-        mainAxisSpacing: 4.h,
+        aspectRatio: 0.56,
+        crossAxisSpacing: 0.w,
+        mainAxisSpacing: 0.h,
 
         itemBuilder: (context, index) {
           final product =
@@ -98,7 +99,9 @@ class ProductListView extends StatelessWidget {
           return ProductCard(
             productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
             name: product?.title ?? '',
-            description: product?.description ?? '',
+            description: ProductHelpers.extractTextWithEntities(
+              product?.description ?? '',
+            ),
             rating: product?.averageRating?.toDouble() ?? 0.0,
 
             price: product?.variants?.firstOrNull?.specialPrice ?? 0,
@@ -177,9 +180,9 @@ class ProductListView extends StatelessWidget {
         paginationErrorMessage: null,
         onPaginationRetry: null,
         padding: EdgeInsets.symmetric(horizontal: 0),
-        aspectRatio: 0.64,
-        crossAxisSpacing: 4.w,
-        mainAxisSpacing: 4.h,
+        aspectRatio: 0.56,
+        crossAxisSpacing: 0.w,
+        mainAxisSpacing: 0.h,
         itemBuilder: (context, index) {
           final product = controller
               .productSearchResponse
@@ -189,7 +192,9 @@ class ProductListView extends StatelessWidget {
           return ProductCard(
             productUrl: AppInfo.kImageBaseUrl + (product?.thumbnail ?? ''),
             name: product?.title ?? '',
-            description: product?.description ?? '',
+            description: ProductHelpers.extractTextWithEntities(
+              product?.description ?? '',
+            ),
             rating: product?.averageRating?.toDouble() ?? 0.0,
 
             price: product?.variants?.firstOrNull?.specialPrice ?? 0,

@@ -4,6 +4,7 @@ class ProductResponse {
   int? statusCode;
   bool? success;
   ProductData? responseData;
+  List<ProductItem>? similarProduct;
   Meta? meta;
   String? message;
 
@@ -13,11 +14,20 @@ class ProductResponse {
     this.statusCode,
     this.success,
     this.responseData,
+    this.similarProduct,
     this.meta,
     this.message,
   });
 
   factory ProductResponse.fromJson(Map<String, dynamic> json) {
+    List<ProductItem> list = [];
+    if (json['data'] is List) {
+      for (var item in json['data']) {
+        if (item is Map<String, dynamic>) {
+          list.add(ProductItem.fromJson(item));
+        }
+      }
+    }
     return ProductResponse(
       isLoading: false,
       isPaginationLoading: false,
@@ -26,6 +36,8 @@ class ProductResponse {
       responseData: json['data'] is Map
           ? ProductData.fromJson(json['data'])
           : null,
+      similarProduct: list,
+
       meta: json['meta'] is Map ? Meta.fromJson(json['meta']) : null,
       message: json['message'] is String ? json['message'] : null,
     );

@@ -9,7 +9,17 @@ class AppBindings extends Bindings {
   void dependencies() {
     Get.lazyPut<ApiProvider>(() => ApiProvider());
     Get.lazyPut<DashBoardController>(() => DashBoardController());
-    Get.lazyPut<ProductInfoController>(() => ProductInfoController());
     Get.lazyPut<ProductListViewController>(() => ProductListViewController());
+  }
+}
+
+class ProductInfoBinding extends Bindings {
+  @override
+  void dependencies() {
+    final productId = Get.arguments ?? "default";
+    // Named parameter must match the controller
+    Get.create<ProductInfoController>(
+      () => ProductInfoController(productId: productId),
+    );
   }
 }

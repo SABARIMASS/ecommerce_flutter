@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sephora/app/core/helpers/app_info.dart';
+import 'package:sephora/app/modules/product/data/product_detail_api_data.dart';
 import '../../../../shared/app_style.dart';
 import '../../../core/utils/percentage.dart';
-import '../data/product_list_api_data.dart';
+
 import 'package:flutter_html/flutter_html.dart';
 
 import 'image_slider_widget.dart';
 
 class CustomProductDetailWidget extends StatelessWidget {
-  final ProductItem product;
+  final ProductData product;
 
   const CustomProductDetailWidget({super.key, required this.product});
 
@@ -194,7 +195,7 @@ class CustomProductDetailWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProductImageCarousel(product: product),
+          ProductImageCarousel(productImages: product.productImages ?? []),
 
           _buildTopInfoSection(),
 

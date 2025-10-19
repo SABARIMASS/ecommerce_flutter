@@ -74,7 +74,7 @@ class ApiProvider extends GetConnect {
 
 extension ApiMethods on ApiProvider {
   Future<Response> _delete(Resource resource, Map<String, String>? queryParam) {
-    return httpClient.delete(resource.url, query: queryParam);
+    return httpClient.delete(resource.url, query: queryParam, headers: _header);
   }
 
   Future<Response> _put(Resource resource, Map<String, String>? queryParam) {
@@ -82,6 +82,7 @@ extension ApiMethods on ApiProvider {
       resource.url,
       body: resource.request,
       query: queryParam,
+      headers: _header,
     );
   }
 
@@ -90,19 +91,26 @@ extension ApiMethods on ApiProvider {
       resource.url,
       body: resource.request,
       query: queryParam,
+      headers: _header,
     );
   }
+
+  Map<String, String> get _header => {
+    'Content-Type': 'application/json',
+    'accept': '*/*',
+  };
 
   Future<Response> _postFormData(String url, FormData formData) {
     return httpClient.post(
       url,
       body: formData,
+      headers: _header,
       // headers: defaultApiHeaders(token, userVerifyHeader, form: true),
     );
   }
 
   Future<Response> _get(Resource resource, Map<String, String>? queryParam) {
-    return httpClient.get(resource.url, query: queryParam);
+    return httpClient.get(resource.url, query: queryParam, headers: _header);
   }
 }
 
