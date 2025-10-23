@@ -89,7 +89,7 @@ class ProductListView extends StatelessWidget {
         paginationErrorMessage: null,
         onPaginationRetry: null,
         padding: EdgeInsets.symmetric(horizontal: 0),
-        aspectRatio: 0.56,
+        aspectRatio: 0.48,
         crossAxisSpacing: 0.w,
         mainAxisSpacing: 0.h,
 

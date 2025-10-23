@@ -126,7 +126,7 @@ class ProductCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontWeight: AppFontWeight.bold.value,
+                        fontWeight: AppFontWeight.semiBold.value,
                         fontSize: AppFontSize.extraSmall.value,
                         color: AppColors.kPrimaryTextColor,
                       ),
@@ -138,10 +138,10 @@ class ProductCard extends StatelessWidget {
                         padding: EdgeInsets.only(top: 2.h),
                         child: Text(
                           description,
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontWeight: AppFontWeight.bold.value,
+                            fontWeight: AppFontWeight.medium.value,
                             fontSize: AppFontSize.extraSmall.value,
                             color: AppColors.kPrimaryTextColor,
                           ),

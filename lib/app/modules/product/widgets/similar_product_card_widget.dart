@@ -38,8 +38,16 @@ class SimilarProductCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: AppColors.kGreyColor.withValues(
+              alpha: 0.3,
+            ), // Set your desired color
+            width: 1.w, // Set border width
+          ),
+        ),
         color: AppColors.kPrimaryBackgroundColor,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(0.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
